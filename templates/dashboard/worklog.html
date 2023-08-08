@@ -1,0 +1,76 @@
+{% extends "main/header.html" %}
+
+{% block content %}
+<section class="content">
+    <div class="row">
+        <div class="col-xl-4 col-12">
+            <form method="POST" class="post-form">
+                <div class="box">
+                    <div class="box-body">
+                        <h4 class="box-title">Add Log</h4>
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div>
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.errors %}
+                            <ul class="errorlist">
+                                {% for error in field.errors %}
+                                <p class="text-danger ms-5">{{ error }}</p>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button type="submit"
+                        class="waves-effect waves-light btn btn-sm btn-outline btn-primary">ADD</button>
+                </div>
+            </form>
+        </div>
+
+
+        <div class="col-xl-8 col-12">
+            <div class="box">
+                <div class="box-header pb-0 no-border">
+                    <h4 class="box-title">
+                        Work Log
+                    </h4>
+                </div>
+
+                <div class="box-body px-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <tbody>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Facility</th>
+                                    <th>Activity</th>
+                                    <th>Volume</th>
+                                    <th>Hours Worked</th>
+                                    <th>Comments</th>
+                                    <th>Earned Hours</th>
+                                    <th>PGL</th>
+                                </tr>
+                                {% for worklog in worklogs %}
+                                <tr>
+                                    <td>{{worklog.date}}</td>
+                                    <td>{{worklog.facility_id}}</td>
+                                    <td>{{worklog.activity_id}}</td>
+                                    <td>{{worklog.volume}}</td>
+                                    <td>{{worklog.hours_worked}}</td>
+                                    <td>{{worklog.comments}}</td>
+                                    <td>{{worklog.earned_hours}}</td>
+                                    <td>{{worklog.pgl}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}

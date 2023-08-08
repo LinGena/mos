@@ -1,0 +1,55 @@
+{% extends "main/header.html" %}
+
+{% block content %}
+
+<div class="container h-p100">
+    <div class="row align-items-center justify-content-md-center h-p100">
+
+        <div class="col-12">
+            <div class="row justify-content-center g-0">
+                <div class="col-lg-5 col-md-5 col-12">
+                    <div class="bg-white rounded10 shadow-lg">
+                        <div class="content-top-agile p-20 pb-0">
+                            <h2 class="text-primary">Create an account</h2>
+                            <p class="mb-0">Please, sign up using the following form:</p>
+                        </div>
+                        <div class="p-40">
+                            <form action="{% url 'register' %}" method="post">
+                                {% csrf_token %}
+
+                                {% for field in user_form %}
+                                <div>
+                                    {{ field.label_tag }}
+                                    {{ field }}
+                                    {% if field.errors %}
+                                    <ul class="errorlist">
+                                        {% for error in field.errors %}
+                                        <p class="text-danger ms-5">{{ error }}</p>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+
+
+                                <!-- {{ user_form.as_p }} -->
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <button type="submit" class="btn btn-info margin-top-10">SIGN UP</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="text-center">
+                                <p class="mt-15 mb-0">Already have an account?<a href="login/" class="text-danger ms-5">
+                                        Log In</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% endblock %}

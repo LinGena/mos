@@ -1,0 +1,65 @@
+{% extends "main/header.html" %}
+
+{% block content %}
+<section class="content">
+    <div class="row">
+
+        <div class="col-xl-4 col-12">
+            <div class="box">
+                <div class="box-body">
+                    <h4 class="box-title">Add Activity</h4>
+
+                    <form method="POST" class="post-form">
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div>
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.errors %}
+                            <ul class="errorlist">
+                                {% for error in field.errors %}
+                                <p class="text-danger ms-5">{{ error }}</p>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        <button type="submit"
+                            class="waves-effect waves-light btn btn-sm btn-outline btn-primary">ADD</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-12">
+            <div class="box">
+                <div class="box-header pb-0 no-border">
+                    <h4 class="box-title">
+                        Activities List
+                    </h4>
+                </div>
+                <div class="box-body px-0">
+                    <div class="media-list media-list-hover media-list-divided cases-div">
+
+                        {% for activity in activities %}
+                        <form method="POST" class="post-form" action="{% url 'update_list' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="list_name" value="activities">
+                            <input type="hidden" name="id" value="{{ activity.id }}">
+                            <div class="media media-single">
+                                <input name="name" class="form-control ps-15 bg-transparent"
+                                    value="{{ activity.name }}">
+                                <button type="submit"
+                                    class="waves-effect waves-light btn btn-sm btn-outline btn-primary"
+                                    style="width:100px; margin: 1px;">Update</button>
+                            </div>
+                        </form>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
