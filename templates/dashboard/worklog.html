@@ -4,29 +4,43 @@
 <section class="content">
     <div class="row">
         <div class="col-xl-4 col-12">
-            <form method="POST" class="post-form">
-                <div class="box">
-                    <div class="box-body">
-                        <h4 class="box-title">Add Log</h4>
-                        {% csrf_token %}
-                        {% for field in form %}
-                        <div>
-                            {{ field.label_tag }}
-                            {{ field }}
-                            {% if field.errors %}
-                            <ul class="errorlist">
-                                {% for error in field.errors %}
-                                <p class="text-danger ms-5">{{ error }}</p>
-                                {% endfor %}
-                            </ul>
-                            {% endif %}
+            <div id="app">
+                <form method="POST" class="post-form">
+                    <div class="box">
+                        <div class="box-body">
+                            <h4 class="box-title">Add Log</h4>
+                            {% csrf_token %}
+                            <div>
+                                <label>Facility:</label>
+                                <n-select v-model:value="selectedFacilityId" label-field="name" value-field="id"
+                                    filterable :options="{{facility_id_data}}" />
+                            </div>
+                            <input type="hidden" name="facility_id_name" v-model:value="selectedFacilityId">
+                            <div>
+                                <label>Activity:</label>
+                                <n-select v-model:value="selectedActivityId" label-field="name" value-field="id"
+                                    filterable :options="{{activity_id_data}}" />
+                            </div>
+                            <input type="hidden" name="activity_id_name" v-model:value="selectedActivityId">
+                            {% for field in form %}
+                            <div>
+                                {{ field.label_tag }}
+                                {{ field }}
+                                {% if field.errors %}
+                                <ul class="errorlist">
+                                    {% for error in field.errors %}
+                                    <p class="text-danger ms-5">{{ error }}</p>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
+                        <button type="submit" :disabled="!selectedFacilityId || !selectedActivityId"
+                            class="waves-effect waves-light btn btn-sm btn-outline btn-primary">ADD</button>
                     </div>
-                    <button type="submit"
-                        class="waves-effect waves-light btn btn-sm btn-outline btn-primary">ADD</button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
 
 
@@ -71,6 +85,24 @@
             </div>
         </div>
     </div>
-
 </section>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="https://unpkg.com/vue@next"></script>
+<script src="https://unpkg.com/naive-ui"></script>
+<script>
+    const selectApp = {
+        data() {
+            return {
+                selectedFacilityId: null,
+                selectedActivityId: null,
+            }
+        },
+        delimiters: ['[[', ']]'],
+    }
+
+    Vue.createApp(selectApp).use(naive).mount('#app')
+</script>
 {% endblock %}

@@ -10,6 +10,7 @@ css/
 images/
 js/
 scss/
+staticfiles/
 # Compiled Java class files
 *.class
 

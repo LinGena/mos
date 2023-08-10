@@ -76,18 +76,6 @@ class WorkLogForm(forms.ModelForm):
         initial=date.today(),
         input_formats=['%Y-%m-%d']
     )
-    facility_id_name = forms.ModelChoiceField(
-        queryset=models.Facilities.objects.all(),
-        to_field_name='id',
-        label='Facility',
-        widget=forms.Select(attrs={'class': 'form-control ps-15 bg-transparent'}),
-    )
-    activity_id_name = forms.ModelChoiceField(
-        queryset=models.Activities.objects.all(),
-        to_field_name='id',
-        label='Activity',
-        widget=forms.Select(attrs={'class': 'form-control ps-15 bg-transparent'}),
-    )
     volume = forms.DecimalField(
         label='Volume',
         widget=forms.NumberInput(attrs={'class': 'form-control ps-15 bg-transparent', 'style': 'width: 150px;', 'type': 'number', 'placeholder': 'Enter value', 'step': 'any'})
@@ -112,4 +100,4 @@ class WorkLogForm(forms.ModelForm):
 
     class Meta:
         model = models.Worklog
-        fields = ('date','facility_id_name','activity_id_name','volume','hours_worked','comments','earned_hours','pgl')
+        fields = ('date','volume','hours_worked','comments','earned_hours','pgl')

@@ -5,6 +5,7 @@ from . import models
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
+import json
 
 
 @login_required
@@ -104,7 +105,12 @@ def dashboard(request):
 
         worklog.facility_id = models.Facilities .objects.get(id=worklog.facility_id)
         worklog.activity_id = models.Activities.objects.get(id=worklog.activity_id)
-	
-    return render(request, 'dashboard/worklog.html', {'form': form, 'worklogs':worklogs})
+
+    activity_id_data = models.Activities.objects.all().values('id', 'name')
+    activity_id_data = list(activity_id_data)
+    facility_id_data = models.Facilities.objects.all().values('id', 'name')
+    facility_id_data = list(facility_id_data)
+
+    return render(request, 'dashboard/worklog.html', {'form': form, 'worklogs':worklogs, 'activity_id_data':activity_id_data, 'facility_id_data':facility_id_data})
 
         
