@@ -76,22 +76,6 @@ class WorkLogForm(forms.ModelForm):
         initial=date.today(),
         input_formats=['%Y-%m-%d']
     )
-    volume = forms.DecimalField(
-        label='Volume',
-        widget=forms.NumberInput(attrs={'class': 'form-control ps-15 bg-transparent', 'style': 'width: 150px;', 'type': 'number', 'placeholder': 'Enter value', 'step': 'any'})
-    )
-    hours_worked = forms.DecimalField(
-        label='Hours Worked',
-        widget=forms.NumberInput(attrs={'class': 'form-control ps-15 bg-transparent', 'style': 'width: 150px;', 'type': 'number', 'placeholder': 'Enter value', 'step': 'any'})
-    )
-    earned_hours = forms.DecimalField(
-        label='Earned Hours',
-        widget=forms.NumberInput(attrs={'class': 'form-control ps-15 bg-transparent', 'style': 'width: 150px;', 'type': 'number', 'placeholder': 'Enter value', 'step': 'any'})
-    )
-    pgl = forms.DecimalField(
-        label='PGL',
-        widget=forms.NumberInput(attrs={'class': 'form-control ps-15 bg-transparent', 'style': 'width: 150px;', 'type': 'number', 'placeholder': 'Enter value', 'step': 'any'})
-    )
     comments = forms.CharField(
         label='Comments',
         widget=forms.Textarea(attrs={'class': 'form-control ps-15 bg-transparent', 'placeholder': 'Enter comments'}),
@@ -100,4 +84,4 @@ class WorkLogForm(forms.ModelForm):
 
     class Meta:
         model = models.Worklog
-        fields = ('date','volume','hours_worked','comments','earned_hours','pgl')
+        fields = ('date','volume','hours_worked','comments')

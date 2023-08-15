@@ -12,6 +12,7 @@ class Activities(models.Model):
     class Meta:
         managed = False
         db_table = 'activities'
+        verbose_name_plural = 'activities'
 
 
 class Facilities(models.Model):
@@ -25,6 +26,7 @@ class Facilities(models.Model):
     class Meta:
         managed = False
         db_table = 'facilities'
+        verbose_name_plural = 'facilities'
 
 
 class Worklog(models.Model):
@@ -43,3 +45,14 @@ class Worklog(models.Model):
     class Meta:
         managed = False
         db_table = 'worklog'
+
+
+class Pgl(models.Model):
+    facility_id = models.IntegerField()
+    activity_id = models.IntegerField()
+    pgl = models.FloatField()
+
+    class Meta:
+        managed = False
+        db_table = 'pgl'
+        verbose_name_plural = 'pgl'

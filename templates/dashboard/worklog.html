@@ -1,11 +1,13 @@
 {% extends "main/header.html" %}
 
 {% block content %}
-<section class="content">
-    <div class="row">
-        <div class="col-xl-4 col-12">
-            <div id="app">
+<div id="app">
+    <section class="content">
+        <div class="row">
+            <div class="col-xl-4 col-12">
+
                 <form method="POST" class="post-form">
+                    <input type="hidden" name="formname" value="addnew">
                     <div class="box">
                         <div class="box-body">
                             <h4 class="box-title">Add Log</h4>
@@ -22,87 +24,225 @@
                                     filterable :options="{{activity_id_data}}" />
                             </div>
                             <input type="hidden" name="activity_id_name" v-model:value="selectedActivityId">
-                            {% for field in form %}
                             <div>
-                                {{ field.label_tag }}
-                                {{ field }}
-                                {% if field.errors %}
+                                <table style="width:100%">
+                                    <tr>
+                                        <td>
+                                            {{ form.date.label_tag }}
+                                            {{ form.date }}
+                                        </td>
+                                        <td>
+                                            <label>Volume</label>
+                                            <input v-model="ValueInput" type="number" name='volume'
+                                                class='form-control ps-15 bg-transparent' style='width: 100px;'
+                                                placeholder='Value' step='any'>
+                                        </td>
+                                        <td>
+                                            <label>Hours Worked</label>
+                                            <input v-model="HoursWorkedInput" type="number" name='hours_worked'
+                                                class='form-control ps-15 bg-transparent' style='width: 100px;'
+                                                placeholder='Value' step='any'>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div>
+
+                            </div>
+                            <div>
+                                {{ form.comments.label_tag }}
+                                {{ form.comments }}
+                            </div>
+
+                            <div style="padding-top:10px">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td>
+                                            <h4>Earned Hours: [[earned_hours]]</h4>
+                                        </td>
+                                        <td>
+                                            <h4>PGL: [[pglValue]]</h4>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <input type="hidden" name="earned_hours" v-model:value="earned_hours">
+                            <input type="hidden" name="pgl" v-model:value="pglValue">
+                            <div>
+                                {% if form.errors %}
                                 <ul class="errorlist">
-                                    {% for error in field.errors %}
+                                    {% for error in form.errors %}
                                     <p class="text-danger ms-5">{{ error }}</p>
                                     {% endfor %}
                                 </ul>
                                 {% endif %}
                             </div>
-                            {% endfor %}
                         </div>
-                        <button type="submit" :disabled="!selectedFacilityId || !selectedActivityId"
+                        <button type="submit"
+                            :disabled="!selectedFacilityId || !selectedActivityId || !ValueInput || !HoursWorkedInput"
                             class="waves-effect waves-light btn btn-sm btn-outline btn-primary">ADD</button>
                     </div>
                 </form>
+
             </div>
-        </div>
+            <div class="col-xl-8 col-12">
+                <div class="box">
+                    <div class="box-header pb-0 no-border">
+                        <h4 class="box-title">
+                            Work Log
+                        </h4>
+                    </div>
+                    <div class="box-header pb-0 no-border">
+                        <h4 class="box-title">
+                            <form method="POST" class="post-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="formname" value="logs">
+                                <input type="date" name="changedatelog" class="form-control ps-15 bg-transparent"
+                                    style="width: 150px;" input_formats="['%Y-%m-%d']" v-model="dateLog">
+                                <button type="submit" style="display: none;"
+                                    class="waves-effect waves-light btn btn-sm btn-outline btn-primary simulate-button">
+                                    Change
+                                </button>
 
+                            </form>
+                        </h4>
+                    </div>
+                    <div class="box-body px-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <tbody>
+                                    <tr>
+                                        <th>Facility</th>
+                                        <th>Activity</th>
+                                        <th>Volume</th>
+                                        <th>Hours Worked</th>
+                                        <th>Comments</th>
+                                        <th>Earned Hours</th>
+                                        <th>PGL</th>
+                                        <th></th>
+                                    </tr>
+                                    {% if worklogs %}
+                                    {% for worklog in worklogs %}
+                                    <tr>
+                                        <td>{{worklog.facility_id}}</td>
+                                        <td>{{worklog.activity_id}}</td>
+                                        <td>{{worklog.volume}}</td>
+                                        <td>{{worklog.hours_worked}}</td>
+                                        <td>{{worklog.comments}}</td>
+                                        <td>{{worklog.earned_hours}}</td>
+                                        <td>{{worklog.pgl}}</td>
+                                        <td>
+                                            <form method="POST" class="post-form"
+                                                onsubmit="return confirm('Are you sure you want to delete this item?');">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="formname" value="dellog">
+                                                <input type="hidden" name="worklogid" value="{{worklog.id}}">
+                                                <input type="hidden" name="changedatelog" v-model="dateLog">
+                                                <button type="submit"
+                                                    class="waves-effect waves-light btn btn-sm btn-outline btn-primary">
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td><b>Daily total</b></td>
+                                        <td><b>{{dayly_total.activity_count}}</b></td>
+                                        <td></td>
+                                        <td><b>{{dayly_total.Sum_hours_worked}}</b></td>
+                                        <td></td>
+                                        <td><b>{{dayly_total.Sum_earned_hours}}</b></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="8" align="center">No log this day</td>
+                                    </tr>
+                                    {% endif %}
 
-        <div class="col-xl-8 col-12">
-            <div class="box">
-                <div class="box-header pb-0 no-border">
-                    <h4 class="box-title">
-                        Work Log
-                    </h4>
-                </div>
+                                </tbody>
+                            </table>
 
-                <div class="box-body px-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <tbody>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Facility</th>
-                                    <th>Activity</th>
-                                    <th>Volume</th>
-                                    <th>Hours Worked</th>
-                                    <th>Comments</th>
-                                    <th>Earned Hours</th>
-                                    <th>PGL</th>
-                                </tr>
-                                {% for worklog in worklogs %}
-                                <tr>
-                                    <td>{{worklog.date}}</td>
-                                    <td>{{worklog.facility_id}}</td>
-                                    <td>{{worklog.activity_id}}</td>
-                                    <td>{{worklog.volume}}</td>
-                                    <td>{{worklog.hours_worked}}</td>
-                                    <td>{{worklog.comments}}</td>
-                                    <td>{{worklog.earned_hours}}</td>
-                                    <td>{{worklog.pgl}}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+</div>
 {% endblock %}
 
 
 {% block scripts %}
 <script src="https://unpkg.com/vue@next"></script>
 <script src="https://unpkg.com/naive-ui"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+    axios.defaults.xsrfHeaderName = "X-CSRFToken";
+    axios.defaults.xsrfCookieName = "csrftoken";
+
     const selectApp = {
         data() {
             return {
                 selectedFacilityId: null,
                 selectedActivityId: null,
+                pglValue: null,
+                earned_hours: null,
+                ValueInput: null,
+                HoursWorkedInput: null,
+                dateLog: new Date("{{ dateLogs }}").toISOString().split("T")[0],
             }
         },
         delimiters: ['[[', ']]'],
+        methods: {
+            async fetchData() {
+                if (this.selectedFacilityId && this.selectedActivityId) {
+
+                    const post_dict = {
+                        'facility_id': this.selectedFacilityId,
+                        'activity_id': this.selectedActivityId
+                    }
+
+                    console.log(post_dict)
+                    await axios.post('/api/get_pgl', post_dict)
+                        .then(response => {
+                            this.pglValue = response.data.pgl;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching PGL data:', error);
+                            this.pglValue = null;
+                        })
+                }
+            },
+            earnedHoursMath() {
+                try {
+                    this.earned_hours = (this.ValueInput * this.pglValue) / 60
+                }
+                catch {
+                    this.earned_hours = null
+                }
+            },
+
+            changeDateLog() {
+                const button = document.querySelector(".simulate-button");
+                if (button) {
+                    button.click();
+                }
+            },
+
+        },
+        watch: {
+            selectedFacilityId: 'fetchData',
+            selectedActivityId: 'fetchData',
+            ValueInput: 'earnedHoursMath',
+            pglValue: 'earnedHoursMath',
+            dateLog: 'changeDateLog',
+        }
     }
 
     Vue.createApp(selectApp).use(naive).mount('#app')
+
 </script>
 {% endblock %}

@@ -10,5 +10,6 @@ urlpatterns = [
     path('activities/', views.activities, name='activities'),
     path('update_list/', views.update_list, name='update_list'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('api/get_pgl', views.api_get_pgl, name='api_get_pgl')
 ]
 
